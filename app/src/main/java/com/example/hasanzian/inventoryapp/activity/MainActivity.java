@@ -2,6 +2,7 @@ package com.example.hasanzian.inventoryapp.activity;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 insertProducts();
                 displayDatabaseInfo();
+                //  Intent editorIntent = new Intent(getApplicationContext(),EditorActivity.class);
+                startActivity(new Intent(getApplicationContext(), EditorActivity.class));
             }
         });
         mHelper = new InventoryDbHelper(this);
@@ -50,23 +53,21 @@ public class MainActivity extends AppCompatActivity {
     /*
      *  Helper method to insert dummy data in Products table for debugging purpose
      * */
-
     private void insertProducts() {
         SQLiteDatabase db = mHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(InventoryEntry.COLUMN_PRODUCT_NAME , "Mi A1");
-        values.put(InventoryEntry.COLUMN_PRICE,15999);
-        values.put(InventoryEntry.COLUMN_QUANTITY,100);
-        values.put(InventoryEntry.COLUMN_SUPPLIER_NAME,"Xiaomi Ltd.");
-        values.put(InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER,180020020);
+        values.put(InventoryEntry.COLUMN_PRODUCT_NAME, "Mi A1");
+        values.put(InventoryEntry.COLUMN_PRICE, 15999);
+        values.put(InventoryEntry.COLUMN_QUANTITY, 100);
+        values.put(InventoryEntry.COLUMN_SUPPLIER_NAME, "Xiaomi Ltd.");
+        values.put(InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER, 180020020);
 
-        long newRowID = db.insert(InventoryEntry.TABLE_NAME , null,values);
-        if(newRowID == -1){
-            Toast.makeText(this,"Error in data insertion",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Toast.makeText(this,"data insertion: " +newRowID,Toast.LENGTH_SHORT).show();
+        long newRowID = db.insert(InventoryEntry.TABLE_NAME, null, values);
+        if (newRowID == -1) {
+            Toast.makeText(this, "Error in data insertion", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "data insertion: " + newRowID, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -83,5 +84,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            displayDatabaseInfo();
+        }
     }
 }

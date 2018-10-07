@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Inventory App</string>
+    <string name="str_enter_product_name">Enter Product Name</string>
+    <string name="str_enter_product_price">Enter Product Price</string>
+    <string name="str_enter_product_quantity">Enter Product Quantity</string>
+    <string name="str_enter_supplier_name">Supplier Name</string>
+    <string name="str_enter_supplier_number">Supplier Number</string>
 </resources>
