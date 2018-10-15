@@ -5,4 +5,6 @@
     <string name="str_enter_product_quantity">Enter Product Quantity</string>
     <string name="str_enter_supplier_name">Supplier Name</string>
     <string name="str_enter_supplier_number">Supplier Number</string>
+    <string name="dummy_data">Dummy Data</string>
+    <string name="delete_all">Delete All</string>
 </resources>
