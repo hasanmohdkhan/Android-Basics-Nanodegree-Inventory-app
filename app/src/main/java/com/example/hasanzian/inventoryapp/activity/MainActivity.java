@@ -21,6 +21,14 @@ import com.example.hasanzian.inventoryapp.helper.InventoryDbHelper;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_SUPPLIER_NAME;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.TABLE_NAME;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry._ID;
+
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.db_numbers)
@@ -77,10 +85,40 @@ public class MainActivity extends AppCompatActivity {
     private void displayDatabaseInfo() {
 
         SQLiteDatabase db = mHelper.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
+
+            cursor = db.query(TABLE_NAME, projection, null, null, null, null, null);
+            // Figure out the index of each column
+            int idColumnIndex = cursor.getColumnIndex(_ID);
+            int productNameColumnIndex = cursor.getColumnIndex(COLUMN_PRODUCT_NAME);
+            int priceColumnIndex = cursor.getColumnIndex(COLUMN_PRICE);
+            int quantityColumnIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
+            int supplierNameColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_NAME);
+            int supplierPhoneColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
 
 
-        try (Cursor cursor = db.rawQuery("SELECT * FROM " + InventoryEntry.TABLE_NAME, null)) {
-            db_count.setText("Number of rows in pets database table: " + cursor.getCount());
+            db_count.setText("Number of rows in pets database table: " + cursor.getCount() + "\n\n");
+            db_count.append(_ID + "-" + COLUMN_PRODUCT_NAME + " - " + COLUMN_PRICE + " - " + COLUMN_QUANTITY + " - " + COLUMN_SUPPLIER_NAME + " - " + COLUMN_SUPPLIER_PHONE_NUMBER + "\n");
+
+            while (cursor.moveToNext()) {
+
+                int currentID = cursor.getInt(idColumnIndex);
+                String currentProductName = cursor.getString(productNameColumnIndex);
+                int currentPrice = cursor.getInt(priceColumnIndex);
+                int currentQuantity = cursor.getInt(quantityColumnIndex);
+                String currentSupplierName = cursor.getString(supplierNameColumnIndex);
+                int currentPhone = cursor.getInt(supplierPhoneColumnIndex);
+                //add current information to text view
+                db_count.append("\n" + currentID + " - " + currentProductName + " - " + currentPrice + " - " + currentQuantity + " - " + currentSupplierName + " - " + currentPhone);
+            }
+
+
+        } finally {
+            assert cursor != null;
+            cursor.close();
         }
 
 

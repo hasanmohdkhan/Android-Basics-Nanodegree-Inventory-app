@@ -54,7 +54,7 @@ public class EditorActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                long ID = Utils.insertProducts(getApplicationContext(), mHelper, price.getText().toString(), productName.getText().toString(), quantity.getText().toString(), supplier.getText().toString(), phone.getText().toString());
+                long ID = Utils.insertProducts(getApplicationContext(), mHelper, price.getText().toString().trim(), productName.getText().toString().trim(), quantity.getText().toString().trim(), supplier.getText().toString().trim(), phone.getText().toString().trim());
                 if (ID == -1) {
                     Toast.makeText(getApplicationContext(), "Error in data insertion", Toast.LENGTH_SHORT).show();
                 } else {
