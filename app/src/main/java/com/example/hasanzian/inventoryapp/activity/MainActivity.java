@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             int supplierPhoneColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
 
 
-            db_count.setText("Number of rows in pets database table: " + cursor.getCount() + "\n\n");
+            db_count.setText(getString(R.string.number_of_row) + cursor.getCount() + "\n\n");
             db_count.append(_ID + "-" + COLUMN_PRODUCT_NAME + " - " + COLUMN_PRICE + " - " + COLUMN_QUANTITY + " - " + COLUMN_SUPPLIER_NAME + " - " + COLUMN_SUPPLIER_PHONE_NUMBER + "\n");
 
             while (cursor.moveToNext()) {
@@ -140,7 +140,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
+            // Respond to a click on the "Insert dummy data" menu option
             case R.id.dummy:
                 insertProducts();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

@@ -7,4 +7,11 @@
     <string name="str_enter_supplier_number">Supplier Number</string>
     <string name="dummy_data">Dummy Data</string>
     <string name="delete_all">Delete All</string>
+    <string name="number_of_row">Number of rows in pets database table:</string>
+    <string name="error_phone_number">Phone number can not be empty</string>
+    <string name="good_error">Good</string>
+    <string name="product_name_errror">Product Name can not be empty</string>
+    <string name="price_error">Price can not be empty</string>
+    <string name="quantity_error">Quantity can not be empty</string>
+    <string name="supplier_name_error">Supplier Name can not be empty</string>
 </resources>
