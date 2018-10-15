@@ -34,8 +34,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     @BindView(R.id.save_fab)
     FloatingActionButton save;
 
-
-    String productStr, priceStr, quantityStr, supplierStr, phoneStr;
     int p, q, s, rs, ph;
 
     InventoryDbHelper mHelper;
@@ -60,12 +58,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         ButterKnife.bind(this);
         mHelper = new InventoryDbHelper(this);
 
-        productStr = productName.getText().toString().trim();
-        priceStr = price.getText().toString().trim();
-        quantityStr = quantity.getText().toString().trim();
-        supplierStr = supplier.getText().toString().trim();
-        phoneStr = phone.getText().toString().trim();
-
         productName.setOnFocusChangeListener(this);
         price.setOnFocusChangeListener(this);
         quantity.setOnFocusChangeListener(this);
@@ -73,13 +65,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         phone.setOnFocusChangeListener(this);
 
 
-        Log.d("Text", "Et: " + productName + " " + priceStr + " " + quantityStr + " " + supplierStr + " " + phoneStr);
 
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 if (p + s + q + rs + ph == 4 & !isEmpty(phone)) {
                     long ID = Utils.insertProducts(getApplicationContext(), mHelper, price.getText().toString().trim(), productName.getText().toString().trim(), quantity.getText().toString().trim(), supplier.getText().toString().trim(), phone.getText().toString().trim());
