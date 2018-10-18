@@ -73,9 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
         long newRowID = db.insert(InventoryEntry.TABLE_NAME, null, values);
         if (newRowID == -1) {
-            Toast.makeText(this, "Error in data insertion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_in_data_insertion_str, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, "data insertion: " + newRowID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getApplicationContext().getString(R.string.data_insertion_sucessful_str) + newRowID, Toast.LENGTH_SHORT).show();
+
         }
 
     }

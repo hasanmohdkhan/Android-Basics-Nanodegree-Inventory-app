@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
+import com.example.hasanzian.inventoryapp.R;
 import com.example.hasanzian.inventoryapp.data.InventoryContract;
 import com.example.hasanzian.inventoryapp.helper.InventoryDbHelper;
 
@@ -26,10 +27,10 @@ public class Utils {
 
         long newRowID = db.insert(InventoryContract.InventoryEntry.TABLE_NAME, null, values);
         if (newRowID == -1) {
-            Toast.makeText(mContext, "Error in data insertion", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.error_in_data_insertion_str, Toast.LENGTH_SHORT).show();
             return newRowID;
         } else {
-            Toast.makeText(mContext, "data insertion: " + newRowID, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getString(R.string.data_insertion_sucessful_str) + newRowID, Toast.LENGTH_SHORT).show();
             return newRowID;
         }
     }

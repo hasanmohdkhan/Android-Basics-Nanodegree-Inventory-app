@@ -12,7 +12,7 @@ public class InventoryContract {
     /**
      * constructor for InventoryContract class
      */
-    public InventoryContract() {
+    private InventoryContract() {
     }
 
     /**
