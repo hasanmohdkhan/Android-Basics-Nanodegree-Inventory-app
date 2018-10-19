@@ -98,7 +98,8 @@
             android:id="@+id/et_supplier_phone"
             style="@style/InputTextEditor"
             android:hint="@string/str_enter_supplier_number"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:maxLength="10" />
 
 
     </android.support.design.widget.TextInputLayout>

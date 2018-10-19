@@ -1,5 +1,6 @@
 package com.example.hasanzian.inventoryapp.activity;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -63,11 +64,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
             public void onClick(View view) {
 
                 if (p + s + q + rs + ph == 4 & !isEmpty(phone)) {
-                    long ID = Utils.insertProducts(getApplicationContext(), mHelper, price.getText().toString().trim(), productName.getText().toString().trim(), quantity.getText().toString().trim(), supplier.getText().toString().trim(), phone.getText().toString().trim());
-                    if (ID == -1) {
-                        Toast.makeText(getApplicationContext(), "Error in data insertion", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "data insertion: " + ID, Toast.LENGTH_SHORT).show();
+                    Uri ID = Utils.insertProducts(getApplicationContext(), productName.getText().toString().trim(), price.getText().toString().trim(), quantity.getText().toString().trim(), supplier.getText().toString().trim(), phone.getText().toString().trim());
+                    if (ID != null) {
                         clearEditText();
                         finish();
                     }

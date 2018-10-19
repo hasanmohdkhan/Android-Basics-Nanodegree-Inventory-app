@@ -14,6 +14,6 @@
     <string name="price_error">Price can not be empty</string>
     <string name="quantity_error">Quantity can not be empty</string>
     <string name="supplier_name_error">Supplier Name can not be empty</string>
-    <string name="error_in_data_insertion_str">Error in data insertion</string>
-    <string name="data_insertion_sucessful_str">data insertion:</string>
+    <string name="error_in_data_insertion_str">Error with saving Product</string>
+    <string name="data_insertion_sucessful_str">Product saved</string>
 </resources>
