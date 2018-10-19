@@ -3,6 +3,8 @@ package com.example.hasanzian.inventoryapp.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.hasanzian.inventoryapp.R;
@@ -33,5 +35,29 @@ public class Utils {
             Toast.makeText(mContext, mContext.getString(R.string.data_insertion_sucessful_str) + newRowID, Toast.LENGTH_SHORT).show();
             return newRowID;
         }
+    }
+
+
+    /**
+     * method to check edit text box is empty or not
+     *
+     * @param etText takes edit text
+     * @return true if edit text is left empty else return false
+     */
+    public static boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() <= 0;
+    }
+
+    /**
+     * greenCheck take current context
+     * and returns a drawable
+     *
+     * @param mContext of current activity
+     * @return a green drawable  with check
+     */
+    public static Drawable greenCheck(Context mContext) {
+        Drawable myIcon = mContext.getResources().getDrawable(R.drawable.check_circle);
+        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
+        return myIcon;
     }
 }

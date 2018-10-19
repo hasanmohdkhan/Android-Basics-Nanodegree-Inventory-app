@@ -125,6 +125,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * refresh the text view after inserting data in db
+     */
     @Override
     protected void onStart() {
         super.onStart();

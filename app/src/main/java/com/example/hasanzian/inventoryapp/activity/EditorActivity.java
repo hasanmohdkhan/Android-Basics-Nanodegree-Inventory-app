@@ -1,14 +1,10 @@
 package com.example.hasanzian.inventoryapp.activity;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +14,8 @@ import com.example.hasanzian.inventoryapp.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.hasanzian.inventoryapp.utils.Utils.isEmpty;
 
 public class EditorActivity extends AppCompatActivity implements View.OnFocusChangeListener {
 
@@ -37,11 +35,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     int p, q, s, rs, ph;
 
     InventoryDbHelper mHelper;
-
-    public static void hideSoftKeyboard(Activity activity, View view) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
-    }
 
     private void clearEditText() {
         productName.setText("");
@@ -63,8 +56,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         quantity.setOnFocusChangeListener(this);
         supplier.setOnFocusChangeListener(this);
         phone.setOnFocusChangeListener(this);
-
-
 
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -94,9 +85,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
 
     }
 
-    private boolean isEmpty(EditText etText) {
-        return etText.getText().toString().trim().length() <= 0;
-    }
 
     @Override
     public void onFocusChange(View view, boolean hasFocus) {
@@ -108,9 +96,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                         productName.setError(getString(R.string.product_name_errror));
                         p = 0;
                     } else {
-                        Drawable myIcon = getResources().getDrawable(R.drawable.check_circle);
-                        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
-                        productName.setError(getString(R.string.good_error), myIcon);
+                        productName.setError(getString(R.string.good_error), Utils.greenCheck(this));
                         p = 1;
 
                     }
@@ -125,13 +111,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                         price.setError(getString(R.string.price_error));
                         rs = 0;
                     } else {
-                        Drawable myIcon = getResources().getDrawable(R.drawable.check_circle);
-                        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
-                        price.setError(getString(R.string.good_error), myIcon);
+                        price.setError(getString(R.string.good_error), Utils.greenCheck(this));
                         rs = 1;
-
                     }
-
                 }
                 break;
 
@@ -142,9 +124,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                         quantity.setError(getString(R.string.quantity_error));
                         q = 0;
                     } else {
-                        Drawable myIcon = getResources().getDrawable(R.drawable.check_circle);
-                        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
-                        quantity.setError(getString(R.string.good_error), myIcon);
+                        quantity.setError(getString(R.string.good_error), Utils.greenCheck(this));
                         q = 1;
                     }
 
@@ -157,9 +137,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                         supplier.setError(getString(R.string.supplier_name_error));
                         s = 0;
                     } else {
-                        Drawable myIcon = getResources().getDrawable(R.drawable.check_circle);
-                        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
-                        supplier.setError(getString(R.string.good_error), myIcon);
+                        supplier.setError(getString(R.string.good_error), Utils.greenCheck(this));
                         s = 1;
                     }
 
@@ -173,9 +151,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                         phone.setError(getString(R.string.error_phone_number));
                         ph = 0;
                     } else {
-                        Drawable myIcon = getResources().getDrawable(R.drawable.check_circle);
-                        myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
-                        phone.setError(getString(R.string.good_error), myIcon);
+                        phone.setError(getString(R.string.good_error), Utils.greenCheck(this));
                         ph = 1;
                     }
 
