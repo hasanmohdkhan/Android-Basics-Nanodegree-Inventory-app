@@ -7,11 +7,15 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.example.hasanzian.inventoryapp.helper.InventoryDbHelper;
+
 /**
  * {@link ContentProvider} for Inventory app.
  */
 
 public class InventoryProvider extends ContentProvider {
+    // database helper object
+    private InventoryDbHelper mDbHelper;
 
     /**
      * Tag for the log messages
@@ -23,7 +27,8 @@ public class InventoryProvider extends ContentProvider {
      */
     @Override
     public boolean onCreate() {
-        return false;
+        mDbHelper = new InventoryDbHelper(getContext());
+        return true;
     }
 
 
