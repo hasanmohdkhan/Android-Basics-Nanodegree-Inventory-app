@@ -16,4 +16,12 @@
     <string name="supplier_name_error">Supplier Name can not be empty</string>
     <string name="error_in_data_insertion_str">Error with saving Product</string>
     <string name="data_insertion_sucessful_str">Product saved</string>
+    <string name="todo">TODO</string>
+    <string name="dummy_quantity">50</string>
+    <string name="dummy_supplier">Xiaomi India pvt</string>
+    <string name="dummy_phone">9453774862</string>
+    <string name="tv_sale">Sale</string>
+    <string name="dummy_cost">₹ 14,999</string>
+    <string name="dummy_product_name">Mi A1</string>
+    <string name="call">Call</string>
 </resources>

@@ -12,10 +12,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.hasanzian.inventoryapp.R;
+import com.example.hasanzian.inventoryapp.adapter.InventoryCursorAdapter;
 import com.example.hasanzian.inventoryapp.helper.InventoryDbHelper;
 import com.example.hasanzian.inventoryapp.utils.Utils;
 
@@ -32,8 +33,6 @@ import static com.example.hasanzian.inventoryapp.data.InventoryContract.Inventor
 
 public class MainActivity extends AppCompatActivity {
 
-    @BindView(R.id.db_numbers)
-    TextView db_count;
     @BindView(R.id.floatingActionButton)
     FloatingActionButton fab;
     InventoryDbHelper mHelper;
@@ -71,39 +70,19 @@ public class MainActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.KITKAT)
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void displayDatabaseInfo() {
+        Cursor cursor;
 
-        Cursor cursor = null;
+        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
+        cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
 
-        try {
-            String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
-            cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
+        // Find the ListView which will be populated with the pet data
+        ListView inventoryListView = findViewById(R.id.list);
 
-            // Figure out the index of each column
-            int idColumnIndex = cursor.getColumnIndex(_ID);
-            int productNameColumnIndex = cursor.getColumnIndex(COLUMN_PRODUCT_NAME);
-            int priceColumnIndex = cursor.getColumnIndex(COLUMN_PRICE);
-            int quantityColumnIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
-            int supplierNameColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_NAME);
-            int supplierPhoneColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        InventoryCursorAdapter adapter = new InventoryCursorAdapter(this, cursor);
 
-            db_count.setText(getString(R.string.number_of_row) + cursor.getCount() + "\n\n");
-            db_count.append(_ID + "-" + COLUMN_PRODUCT_NAME + " - " + COLUMN_PRICE + " - " + COLUMN_QUANTITY + " - " + COLUMN_SUPPLIER_NAME + " - " + COLUMN_SUPPLIER_PHONE_NUMBER + "\n");
-
-            while (cursor.moveToNext()) {
-
-                int currentID = cursor.getInt(idColumnIndex);
-                String currentProductName = cursor.getString(productNameColumnIndex);
-                int currentPrice = cursor.getInt(priceColumnIndex);
-                int currentQuantity = cursor.getInt(quantityColumnIndex);
-                String currentSupplierName = cursor.getString(supplierNameColumnIndex);
-                String currentPhone = cursor.getString(supplierPhoneColumnIndex);
-                //add current information to text view
-                db_count.append("\n" + currentID + " - " + currentProductName + " - " + currentPrice + " - " + currentQuantity + " - " + currentSupplierName + " - " + currentPhone);
-            }
-        } finally {
-            assert cursor != null;
-            cursor.close();
-        }
+        // Attach the adapter to the ListView.
+        inventoryListView.setAdapter(adapter);
 
 
     }
