@@ -84,30 +84,6 @@
                 android:layout_toRightOf="@id/product_image"
                 android:text="@string/dummy_phone" />
 
-            <Button
-                android:id="@+id/btn_sale"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_product_supplier_number"
-                android:layout_alignBaseline="@id/btn_call"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_margin="@dimen/margin_8dp"
-                android:background="@color/colorAccent"
-                android:text="@string/tv_sale" />
-
-            <Button
-                android:id="@+id/btn_call"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_product_supplier_number"
-                android:layout_marginStart="@dimen/margin_16dp"
-                android:layout_marginLeft="@dimen/margin_16dp"
-                android:layout_marginTop="@dimen/margin_8dp"
-                android:layout_toEndOf="@+id/btn_sale"
-                android:layout_toRightOf="@+id/btn_sale"
-                android:background="@color/colorPrimary"
-                android:text="@string/call" />
 
 
         </RelativeLayout>

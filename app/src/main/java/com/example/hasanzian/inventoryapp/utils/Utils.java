@@ -36,6 +36,7 @@ public class Utils {
         values.put(InventoryContract.InventoryEntry.COLUMN_QUANTITY, Integer.parseInt(quantity));
         values.put(InventoryContract.InventoryEntry.COLUMN_SUPPLIER_NAME, supplier);
         values.put(InventoryContract.InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER, phone);
+
         //insert new value via content resolver
         Uri newRowID = mContext.getContentResolver().insert(CONTENT_URI, values);
         // Error
@@ -47,6 +48,28 @@ public class Utils {
             Toast.makeText(mContext, mContext.getString(R.string.data_insertion_sucessful_str), Toast.LENGTH_SHORT).show();
             return newRowID;
         }
+    }
+
+    public static int updateProducts(Uri currentUri, Context mContext, String product, String price, String quantity, String supplier, String phone) {
+        //get param as values and set to corresponding column
+        ContentValues values = new ContentValues();
+        values.put(InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME, product);
+        values.put(InventoryContract.InventoryEntry.COLUMN_PRICE, Integer.parseInt(price));
+        values.put(InventoryContract.InventoryEntry.COLUMN_QUANTITY, Integer.parseInt(quantity));
+        values.put(InventoryContract.InventoryEntry.COLUMN_SUPPLIER_NAME, supplier);
+        values.put(InventoryContract.InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER, phone);
+
+        //insert new value via content resolver
+        int rowsAffected = mContext.getContentResolver().update(currentUri, values, null, null);
+        // Error
+        if (rowsAffected == 0) {
+            //updated fail
+            Toast.makeText(mContext, mContext.getString(R.string.editor_update_item_failed), Toast.LENGTH_SHORT).show();
+        } else
+            //updated successful
+            Toast.makeText(mContext, R.string.editor_update_item_successful, Toast.LENGTH_SHORT).show();
+        return rowsAffected;
+
     }
 
 

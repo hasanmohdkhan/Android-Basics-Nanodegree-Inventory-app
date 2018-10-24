@@ -85,6 +85,8 @@ public class InventoryProvider extends ContentProvider {
                 throw new IllegalArgumentException("Unknown URI Exception");
         }
 
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+
         return cursor;
     }
 
@@ -103,7 +105,6 @@ public class InventoryProvider extends ContentProvider {
             default:
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
-
 
 
     }
@@ -136,6 +137,9 @@ public class InventoryProvider extends ContentProvider {
             Log.e(LOG_TAG, "Failed to insert row for " + uri);
             return null;
         }
+        //notify listeners that data changes
+        getContext().getContentResolver().notifyChange(uri, null);
+
         // Return the new URI with the ID (of the newly inserted row) appended at the end
         return ContentUris.withAppendedId(uri, id);
     }
@@ -145,6 +149,8 @@ public class InventoryProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+        // Track the number of rows that were deleted
+        int rowsDeleted;
         // Get writeable database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
 
@@ -152,15 +158,24 @@ public class InventoryProvider extends ContentProvider {
         switch (match) {
             case INVENTORY:
                 // Delete all rows that match the selection and selection args
-                return database.delete(TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(TABLE_NAME, selection, selectionArgs);
+                break;
             case PATH_INVENTORY_ID:
                 // Delete a single row given by the ID in the URI
                 selection = _ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return database.delete(TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = database.delete(TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Deletion is not supported for " + uri);
         }
+        // If 1 or more rows were deleted, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowsDeleted;
+
     }
 
     /**
@@ -168,21 +183,31 @@ public class InventoryProvider extends ContentProvider {
      */
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String selection, @Nullable String[] selectionArgs) {
+        int rowUpdated;
+
         final int match = sUriMatcher.match(uri);
         switch (match) {
             case INVENTORY:
-                return updateInventory(uri, contentValues, selection, selectionArgs);
+                rowUpdated = updateInventory(uri, contentValues, selection, selectionArgs);
+                break;
             case PATH_INVENTORY_ID:
                 // For the PATH_INVENTORY_ID code, extract out the ID from the URI,
                 // so we know which row to update. Selection will be "_id=?" and selection
                 // arguments will be a String array containing the actual ID.
                 selection = _ID + "=?";
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateInventory(uri, contentValues, selection, selectionArgs);
+                rowUpdated = updateInventory(uri, contentValues, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
 
+        // If 1 or more rows were updated, then notify all listeners that the data at the
+        // given URI has changed
+        if (rowUpdated != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return rowUpdated;
     }
 
     private int updateInventory(Uri uri, ContentValues values, String selection, String[] selectionArgs) {

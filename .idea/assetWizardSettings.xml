@@ -64,9 +64,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_content_save" />
+                            <entry key="height" value="512" />
+                            <entry key="outputName" value="ic_storage" />
                             <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\hasanZian\Downloads\content-save.svg" />
+                            <entry key="sourceFile" value="C:\Users\hasanZian\Downloads\storage (2).svg" />
+                            <entry key="width" value="512" />
                           </map>
                         </option>
                       </PersistentState>

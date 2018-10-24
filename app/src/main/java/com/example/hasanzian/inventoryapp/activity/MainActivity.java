@@ -1,17 +1,23 @@
 package com.example.hasanzian.inventoryapp.activity;
 
-import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,11 +37,17 @@ import static com.example.hasanzian.inventoryapp.data.InventoryContract.Inventor
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.CONTENT_URI;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry._ID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     @BindView(R.id.floatingActionButton)
     FloatingActionButton fab;
+    public static final int INVENTORY_LOADER = 1;
+    @BindView(R.id.empty_view)
+    View empty;
     InventoryDbHelper mHelper;
+    @BindView(R.id.list)
+    ListView inventoryListView;
+    InventoryCursorAdapter mInventoryAdapter;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -51,8 +63,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mHelper = new InventoryDbHelper(this);
-        displayDatabaseInfo();
+        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
+        mInventoryAdapter = new InventoryCursorAdapter(this, null);
 
+        // Attach the mInventoryAdapter to the ListView.
+        inventoryListView.setAdapter(mInventoryAdapter);
+        inventoryListView.setEmptyView(empty);
+
+
+        inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), EditorActivity.class);
+                // here we getting current pet id i.e
+                // content://com.example.android.pets/pets/3
+                Uri currentPetUri = ContentUris.withAppendedId(CONTENT_URI, id);
+                intent.setData(currentPetUri);
+
+
+                startActivity(intent);
+            }
+        });
+
+        getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
     /*
@@ -65,37 +98,6 @@ public class MainActivity extends AppCompatActivity {
         // Receive the new content URI that will allow us to access "Mi A1"'s data in the future.
         Uri newUri = Utils.insertProducts(getApplicationContext(), "Mi A1", "15999", "100", "Xiaomi Ltd.", "8604646437");
 
-    }
-
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void displayDatabaseInfo() {
-        Cursor cursor;
-
-        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
-        cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
-
-        // Find the ListView which will be populated with the pet data
-        ListView inventoryListView = findViewById(R.id.list);
-
-        // Setup an Adapter to create a list item for each row of pet data in the Cursor.
-        InventoryCursorAdapter adapter = new InventoryCursorAdapter(this, cursor);
-
-        // Attach the adapter to the ListView.
-        inventoryListView.setAdapter(adapter);
-
-
-    }
-
-    /**
-     * refresh the text view after inserting data in db
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            displayDatabaseInfo();
-        }
     }
 
     @Override
@@ -111,9 +113,6 @@ public class MainActivity extends AppCompatActivity {
             // Respond to a click on the "Insert dummy data" menu option
             case R.id.dummy:
                 insertProducts();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    displayDatabaseInfo();
-                }
                 return true;
 
             // Respond to a click on the "Delete all entries" menu option
@@ -121,12 +120,30 @@ public class MainActivity extends AppCompatActivity {
                 // Do nothing for now
                 int del = getContentResolver().delete(CONTENT_URI, null, null);
                 Toast.makeText(this, "DELETED :" + del, Toast.LENGTH_SHORT).show();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    displayDatabaseInfo();
-                }
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
+        //  Cursor cursor;
+        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
+        // cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
+        return new CursorLoader(this, CONTENT_URI, projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        // Swap the new cursor in.
+        mInventoryAdapter.swapCursor(data);
+
+    }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        mInventoryAdapter.swapCursor(null);
+
     }
 }

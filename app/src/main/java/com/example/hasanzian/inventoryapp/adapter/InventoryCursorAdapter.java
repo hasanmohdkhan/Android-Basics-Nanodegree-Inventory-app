@@ -74,14 +74,14 @@ public class InventoryCursorAdapter extends CursorAdapter {
         int supplierIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_NAME);
         int supplierNumberIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
 
-        // Read the Inventory attributes from the Cursor for the current Inventory
+        // Read the Inventory attributes from the Cursor for the current Inventory item in list
         String currentProductName = cursor.getString(nameIndex);
         int currentPrice = cursor.getInt(priceIndex);
         int currentQuantity = cursor.getInt(quantityIndex);
         String currentSupplier = cursor.getString(supplierIndex);
         String currentPhone = cursor.getString(supplierNumberIndex);
 
-        // Update the TextViews with the attributes for the current Inventor
+        // Update the TextViews with the attributes for the current Inventory item in list
         name.setText(currentProductName);
         price.setText(String.valueOf(currentPrice));
         quantity.setText(String.valueOf(currentQuantity));
