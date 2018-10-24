@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.hasanzian.inventoryapp.R;
 
@@ -58,16 +60,16 @@ public class InventoryCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, Cursor cursor) {
         //view initialization
         TextView name = view.findViewById(R.id.tv_product_name);
         TextView price = view.findViewById(R.id.tv_product_price);
         TextView quantity = view.findViewById(R.id.tv_product_quantity);
         TextView supplier = view.findViewById(R.id.tv_product_supplier);
         TextView number = view.findViewById(R.id.tv_product_supplier_number);
+        ImageView sale = view.findViewById(R.id.btn_sale);
 
-        /// Find the columns of pet attributes that we're interested in
-
+        // Find the columns of pet attributes that we're interested in
         int nameIndex = cursor.getColumnIndex(COLUMN_PRODUCT_NAME);
         int priceIndex = cursor.getColumnIndex(COLUMN_PRICE);
         int quantityIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
@@ -77,9 +79,9 @@ public class InventoryCursorAdapter extends CursorAdapter {
         // Read the Inventory attributes from the Cursor for the current Inventory item in list
         String currentProductName = cursor.getString(nameIndex);
         int currentPrice = cursor.getInt(priceIndex);
-        int currentQuantity = cursor.getInt(quantityIndex);
+        final int currentQuantity = cursor.getInt(quantityIndex);
         String currentSupplier = cursor.getString(supplierIndex);
-        String currentPhone = cursor.getString(supplierNumberIndex);
+        final String currentPhone = cursor.getString(supplierNumberIndex);
 
         // Update the TextViews with the attributes for the current Inventory item in list
         name.setText(currentProductName);
@@ -88,5 +90,15 @@ public class InventoryCursorAdapter extends CursorAdapter {
         supplier.setText(currentSupplier);
         number.setText(currentPhone);
 
+
+        sale.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(context, "" + currentQuantity, Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
     }
+
 }

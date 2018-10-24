@@ -79,8 +79,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 // content://com.example.android.pets/pets/3
                 Uri currentPetUri = ContentUris.withAppendedId(CONTENT_URI, id);
                 intent.setData(currentPetUri);
-
-
                 startActivity(intent);
             }
         });
