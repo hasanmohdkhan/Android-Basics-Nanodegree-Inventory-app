@@ -75,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getApplicationContext(), EditorActivity.class);
-                // here we getting current pet id i.e
+                // here we getting current item id i.e
                 // content://com.example.android.pets/pets/3
-                Uri currentPetUri = ContentUris.withAppendedId(CONTENT_URI, id);
-                intent.setData(currentPetUri);
+                Uri currentProductUri = ContentUris.withAppendedId(CONTENT_URI, id);
+                intent.setData(currentProductUri);
                 startActivity(intent);
             }
         });

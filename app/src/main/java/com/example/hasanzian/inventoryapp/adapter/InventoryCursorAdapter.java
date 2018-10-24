@@ -1,22 +1,26 @@
 package com.example.hasanzian.inventoryapp.adapter;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.hasanzian.inventoryapp.R;
+import com.example.hasanzian.inventoryapp.utils.Utils;
 
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_SUPPLIER_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_SUPPLIER_PHONE_NUMBER;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.CONTENT_URI;
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry._ID;
 
 /**
  * {@link InventoryCursorAdapter} is an adapter for a list or grid view
@@ -60,7 +64,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
      *                correct row.
      */
     @Override
-    public void bindView(View view, final Context context, Cursor cursor) {
+    public void bindView(View view, final Context context, final Cursor cursor) {
         //view initialization
         TextView name = view.findViewById(R.id.tv_product_name);
         TextView price = view.findViewById(R.id.tv_product_price);
@@ -70,6 +74,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         ImageView sale = view.findViewById(R.id.btn_sale);
 
         // Find the columns of pet attributes that we're interested in
+        int idIndex = cursor.getColumnIndex(_ID);
         int nameIndex = cursor.getColumnIndex(COLUMN_PRODUCT_NAME);
         int priceIndex = cursor.getColumnIndex(COLUMN_PRICE);
         int quantityIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
@@ -77,6 +82,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         int supplierNumberIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
 
         // Read the Inventory attributes from the Cursor for the current Inventory item in list
+        final int currentId = cursor.getInt(idIndex);
         String currentProductName = cursor.getString(nameIndex);
         int currentPrice = cursor.getInt(priceIndex);
         final int currentQuantity = cursor.getInt(quantityIndex);
@@ -94,9 +100,8 @@ public class InventoryCursorAdapter extends CursorAdapter {
         sale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "" + currentQuantity, Toast.LENGTH_SHORT).show();
-
-
+                Uri currentUri = ContentUris.withAppendedId(CONTENT_URI, currentId);
+                Utils.quantityUpdate(currentUri, context, currentQuantity);
             }
         });
     }

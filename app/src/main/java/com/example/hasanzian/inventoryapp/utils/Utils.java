@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.hasanzian.inventoryapp.R;
 import com.example.hasanzian.inventoryapp.data.InventoryContract;
 
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.CONTENT_URI;
 
 /**
@@ -50,6 +51,17 @@ public class Utils {
         }
     }
 
+    /**
+     * update current item with new value
+     *
+     * @param mContext get the calling context
+     * @param product  product name as string
+     * @param price    price as string
+     * @param quantity quantity as string
+     * @param supplier supplier name
+     * @param phone    phone of supplier
+     * @return number of row affected
+     */
     public static int updateProducts(Uri currentUri, Context mContext, String product, String price, String quantity, String supplier, String phone) {
         //get param as values and set to corresponding column
         ContentValues values = new ContentValues();
@@ -97,4 +109,36 @@ public class Utils {
     }
 
 
+    /**
+     * use for sale button
+     * decrease current quantity to 1
+     *
+     * @param currentUri      for current item uri
+     * @param context         current context
+     * @param currentQuantity current quantity of item
+     */
+    public static void quantityUpdate(Uri currentUri, Context context, int currentQuantity) {
+        // checking for zero or negative
+        if (currentQuantity > 0) {
+            currentQuantity -= 1;
+            // -1 current quantity and add new value to db
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_QUANTITY, currentQuantity);
+
+            //insert new value via content resolver
+            int rowsAffected = context.getContentResolver().update(currentUri, values, null, null);
+            // Error
+            if (rowsAffected == 0) {
+                //updated fail
+                Toast.makeText(context, context.getString(R.string.sale_update_item_failed), Toast.LENGTH_SHORT).show();
+            } else
+                //updated successful
+                Toast.makeText(context, R.string.sale_update_item_successful, Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(context, context.getString(R.string.editor_update_zero_item_failed), Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
 }
