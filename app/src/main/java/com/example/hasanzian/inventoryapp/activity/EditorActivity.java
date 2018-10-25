@@ -51,6 +51,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     EditText mSupplier;
     @BindView(R.id.et_supplier_phone)
     EditText mPhone;
+
     /**
      * Boolean flag that keeps track of whether the item has been edited (true) or not (false)
      */
@@ -72,8 +73,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     private Uri mCurrentInventoryUri;
     @BindView(R.id.save_fab)
     FloatingActionButton save;
+    @BindView(R.id.fab_plus)
+    FloatingActionButton plus;
+    @BindView(R.id.fab_minus)
+    FloatingActionButton minus;
 
-    int p, q, s, rs, ph;
+    int p, q, s, rs, ph, quantity;
 
     InventoryDbHelper mHelper;
 
@@ -111,9 +116,11 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         if (mCurrentInventoryUri == null) {
             setTitle(R.string.add_item_string);
             invalidateOptionsMenu();
+            mQuantity.setText("0");
         } else {
             getSupportLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
             setTitle(R.string.edit_existing_item);
+
         }
 
         save.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +152,24 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
             }
         });
 
+        plus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantity = Integer.parseInt(mQuantity.getText().toString().trim());
+                quantity += 1;
+                mQuantity.setText(String.valueOf(quantity));
+            }
+        });
+        minus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quantity = Integer.parseInt(mQuantity.getText().toString().trim());
+                if (quantity > 0) {
+                    quantity -= 1;
+                    mQuantity.setText(String.valueOf(quantity));
+                }
+            }
+        });
 
     }
 
@@ -386,8 +411,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         builder.setMessage(R.string.delete_dialog_msg);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                // User clicked the "Delete" button, so delete the item.
+                // User clicked the "Delete" button, so ic_delete the item.
                 deletePet();
+
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -412,14 +438,15 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         if (mCurrentInventoryUri != null) {
             int rowsDeleted = getContentResolver().delete(mCurrentInventoryUri, null, null);
 
-            // Show a toast message depending on whether or not the delete was successful.
+            // Show a toast message depending on whether or not the ic_delete was successful.
             if (rowsDeleted == 0) {
-                // If no rows were deleted, then there was an error with the delete.
+                // If no rows were deleted, then there was an error with the ic_delete.
                 Toast.makeText(this, getString(R.string.editor_delete_pet_failed), Toast.LENGTH_SHORT).show();
             } else {
-                // Otherwise, the delete was successful and we can display a toast.
+                // Otherwise, the ic_delete was successful and we can display a toast.
                 Toast.makeText(this, getString(R.string.editor_delete_pet_successful), Toast.LENGTH_SHORT).show();
                 finish();
+                startActivity(new Intent(this, MainActivity.class));
             }
 
         }

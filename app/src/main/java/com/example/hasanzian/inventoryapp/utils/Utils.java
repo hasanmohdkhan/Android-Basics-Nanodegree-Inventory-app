@@ -26,7 +26,7 @@ public class Utils {
      * @param price    price as string
      * @param quantity quantity as string
      * @param supplier supplier name
-     * @param phone    phone of supplier
+     * @param phone    ic_phone of supplier
      * @return Uri of newly inserted item
      */
     public static Uri insertProducts(Context mContext, String product, String price, String quantity, String supplier, String phone) {
@@ -59,7 +59,7 @@ public class Utils {
      * @param price    price as string
      * @param quantity quantity as string
      * @param supplier supplier name
-     * @param phone    phone of supplier
+     * @param phone    ic_phone of supplier
      * @return number of row affected
      */
     public static int updateProducts(Uri currentUri, Context mContext, String product, String price, String quantity, String supplier, String phone) {
@@ -103,7 +103,7 @@ public class Utils {
      * @return a green drawable  with check
      */
     public static Drawable greenCheck(Context mContext) {
-        Drawable myIcon = mContext.getResources().getDrawable(R.drawable.check_circle);
+        Drawable myIcon = mContext.getResources().getDrawable(R.drawable.ic_check_circle);
         myIcon.setBounds(0, 0, myIcon.getIntrinsicWidth(), myIcon.getIntrinsicHeight());
         return myIcon;
     }

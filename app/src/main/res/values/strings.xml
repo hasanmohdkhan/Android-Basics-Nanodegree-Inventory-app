@@ -2,7 +2,7 @@
     <string name="app_name">Inventory App</string>
     <string name="str_enter_product_name">Enter Product Name</string>
     <string name="str_enter_product_price">Enter Product Price</string>
-    <string name="str_enter_product_quantity">Enter Product Quantity</string>
+    <string name="str_enter_product_quantity">Enter Quantity</string>
     <string name="str_enter_supplier_name">Supplier Name</string>
     <string name="str_enter_supplier_number">Supplier Number</string>
     <string name="dummy_data">Dummy Data</string>
@@ -55,6 +55,16 @@
     <string name="editor_update_zero_item_failed">You have nothing to sale !!!</string>
     <string name="sale_update_item_successful">Item sale successful !!!</string>
     <string name="sale_update_item_failed">fail to sale item</string>
-
+    <string name="action_editor">Edit</string>
+    <string name="product_name_str">Product Name</string>
+    <string name="details">Details</string>
+    <string name="product_quantity_str">Quantity</string>
+    <string name="product_price_str">Price</string>
+    <string name="product_supplier_str">Supplier Name</string>
+    <string name="product_supplier_number_str">Supplier Number</string>
+    <string name="details_activity_title">Details</string>
+    <string name="toast_msg">Permission is required to call</string>
+    <string name="toast_msg_granted">Permission granted</string>
+    <string name="toast_msg_deny">Permission denied</string>
 
 </resources>

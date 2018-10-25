@@ -10,7 +10,7 @@ import android.provider.BaseColumns;
 public class InventoryContract {
     /**
      * The "Content authority" is a name for the entire content provider, similar to the
-     * relationship between a domain name and its website.  A convenient string to use for the
+     * relationship between a ic_domain name and its website.  A convenient string to use for the
      * content authority is the package name for the app, which is guaranteed to be unique on the
      * device.
      */
@@ -24,7 +24,7 @@ public class InventoryContract {
      * Possible path (appended to base content URI for possible URI's)
      * For instance, content://com.example.android.pets/pets/ is a valid path for
      * looking at pet data. content://com.example.android.pets/staff/ will fail,
-     * as the ContentProvider hasn't been given any information on what to do with "staff".
+     * as the ContentProvider hasn't been given any ic_information on what to do with "staff".
      */
     public static final String PATH_INVENTORY = "Products";
 

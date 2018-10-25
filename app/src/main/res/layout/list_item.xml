@@ -90,11 +90,12 @@
 
             <ImageView
                 android:id="@+id/btn_sale"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_below="@id/tv_product_supplier_number"
                 android:layout_marginStart="@dimen/margin_16dp"
                 android:layout_marginLeft="@dimen/margin_8dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
                 android:layout_marginTop="@dimen/margin_16dp"
                 android:layout_toEndOf="@id/imgview_product_image"
                 android:layout_toRightOf="@id/imgview_product_image"

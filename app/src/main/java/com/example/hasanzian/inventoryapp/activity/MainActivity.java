@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), EditorActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DetailsViewActivity.class);
                 // here we getting current item id i.e
                 // content://com.example.android.pets/pets/3
                 Uri currentProductUri = ContentUris.withAppendedId(CONTENT_URI, id);
@@ -86,15 +86,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
-    /*
-     *  Helper method to insert dummy data in Products table for debugging purpose
-     * */
+    //Helper method to insert dummy data in Products table for debugging purpose
     private void insertProducts() {
         // Insert a new row for "Mi A1" into the provider using the ContentResolver.
         // Use the {@link InventoryEntry#CONTENT_URI} to indicate that we want to insert
         // into the Inventory database table.
         // Receive the new content URI that will allow us to access "Mi A1"'s data in the future.
-        Uri newUri = Utils.insertProducts(getApplicationContext(), "Mi A1", "15999", "100", "Xiaomi Ltd.", "8604646437");
+        Utils.insertProducts(getApplicationContext(), "Mi A1", "15999", "100", "Xiaomi Ltd.", "8604646437");
 
     }
 
@@ -115,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                // Do nothing for now
+                // Delete all entries
                 int del = getContentResolver().delete(CONTENT_URI, null, null);
                 Toast.makeText(this, "DELETED :" + del, Toast.LENGTH_SHORT).show();
                 return true;
