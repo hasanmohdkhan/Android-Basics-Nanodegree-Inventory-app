@@ -85,42 +85,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 startActivity(intent);
             }
         });
-
-        //this creates a png file in internal folder
-        //the directory is like : ......data/sketches/my_sketch_437657436.png
-//        File mFileTemp = new File(getFilesDir() + File.separator + "sketches",
-//                "Image" + System.currentTimeMillis() + ".png");
-//        mFileTemp.getParentFile().mkdirs();
-
-
-//         View.OnClickListener photoAlbumListener = new View.OnClickListener(){
-//            @Override
-//            public void onClick(View arg0) {
-//                Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
-//                imagepath = Environment.getExternalStorageDirectory()+"/sharedresources/"+HelperFunctions.getDateTimeForFileName()+".png";
-//                uriImagePath = Uri.fromFile(new File(imagepath));
-//                photoPickerIntent.setType("image/*");
-//                photoPickerIntent.putExtra(MediaStore.EXTRA_OUTPUT,uriImagePath);
-//                photoPickerIntent.putExtra("outputFormat",Bitmap.CompressFormat.PNG.name());
-//                photoPickerIntent.putExtra("return-data", true);
-//                startActivityForResult(photoPickerIntent, REQUEST_CODE_CHOOSE_PICTURE_FROM_GALLARY);
-//
-//            }
-//        };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
