@@ -122,7 +122,6 @@ public class DetailsViewActivity extends AppCompatActivity implements android.su
             String supplierName = cursor.getString(supplierColumnIndex);
             String phone = cursor.getString(phoneColumnIndex);
             imageUri = cursor.getString(imageColumnIndex);
-            Toast.makeText(this, "" + imageUri, Toast.LENGTH_SHORT).show();
 
             // Update the views on the screen with the values from the database
             mProductName.setText(name);

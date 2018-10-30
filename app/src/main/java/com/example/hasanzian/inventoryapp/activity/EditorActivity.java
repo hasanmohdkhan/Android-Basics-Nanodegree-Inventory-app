@@ -56,7 +56,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
      * Identifier for the inventory data loader
      */
     private static final int EXISTING_INVENTORY_LOADER = 1;
-    // private static final int PICK_IMAGE_REQUEST = 234;
     private static final int PICK_IMAGE_REQUEST = 0;
     private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 4;
     @BindView(R.id.et_product_name)
@@ -183,7 +182,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                     Log.d("Text", "Et: " + mProductName.getText().toString());
 
                 } else {
-                    // Toast.makeText(getApplicationContext(), R.string.warining_toast_str, Toast.LENGTH_SHORT).show();
                     Snackbar snackbar = Snackbar.make(EditorActivity.this.findViewById(android.R.id.content), R.string.warining_toast_str, Snackbar.LENGTH_LONG);
                     // Changing action button text color
                     View sbView = snackbar.getView();
@@ -371,7 +369,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                 if (imageFile != null && imageFile.exists()) {
                     preview.setImageBitmap(Utils.decodeSampledBitmapFromFile(imageFile, 365, 365));
                     oldImage = "" + imageUri;
-                    Toast.makeText(this, "" + imageUri, Toast.LENGTH_SHORT).show();
                 }
             }
         }
