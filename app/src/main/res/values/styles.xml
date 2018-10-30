@@ -8,7 +8,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-
     <style name="InputText">
         <item name="android:layout_margin">@dimen/margin_16dp</item>
         <item name="android:layout_width">match_parent</item>
@@ -30,7 +29,6 @@
         <item name="android:orientation">horizontal</item>
 
     </style>
-
 
     <style name="Header">
         <item name="android:layout_width">match_parent</item>
@@ -166,6 +164,22 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:background">@color/colorGray</item>
+    </style>
+
+    <style name="PreViewImage">
+        <item name="android:layout_width">@dimen/preview_image_150dp</item>
+        <item name="android:layout_height">@dimen/preview_image_150dp</item>
+        <item name="android:layout_margin">@dimen/margin_8dp</item>
+    </style>
+
+    <style name="QuantityUpDownBtn">
+        <item name="android:layout_width">@dimen/sale_btn_48dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/margin_8dp</item>
+        <item name="android:padding">@dimen/margin_8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+
     </style>
 </resources>
 

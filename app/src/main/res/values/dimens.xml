@@ -13,4 +13,5 @@
     <dimen name="divider_1dp">1dp</dimen>
     <dimen name="dimen_0dp">0dp</dimen>
     <dimen name="sale_btn_48dp">48dp</dimen>
+    <dimen name="preview_image_150dp">150dp</dimen>
 </resources>
