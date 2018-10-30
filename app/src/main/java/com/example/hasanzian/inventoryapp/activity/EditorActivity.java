@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -84,6 +86,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     FloatingActionButton plus;
     @BindView(R.id.fab_minus)
     FloatingActionButton minus;
+    @BindView(R.id.container_edit)
+    View parentLayout;
     String oldImage;
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
@@ -101,7 +105,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     int p, q, s, rs, ph, quantity;
     //a Uri object to store file path
     private Uri selectedImage = null;
-
     private void clearEditText() {
         mProductName.setText("");
         mPrice.setText("");
@@ -151,7 +154,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                 Log.d("old", "" + oldImage);
 
                 if (!isEmpty(mProductName) & !isEmpty(mPrice) & !isEmpty(mQuantity) & !isEmpty(mSupplier) & !isEmpty(mPhone) & selectedImage != null) {
-
                     if (mCurrentInventoryUri == null) {
                         Uri ID = Utils.insertProducts(getApplicationContext(), mProductName.getText().toString().trim(), mPrice.getText().toString().trim(), mQuantity.getText().toString().trim(), mSupplier.getText().toString().trim(), mPhone.getText().toString().trim(), selectedImage, false);
                         if (ID != null) {
@@ -181,7 +183,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                     Log.d("Text", "Et: " + mProductName.getText().toString());
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Check Entries " + isEmpty(mPhone), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getApplicationContext(), R.string.warining_toast_str, Toast.LENGTH_SHORT).show();
+                    Snackbar snackbar = Snackbar.make(EditorActivity.this.findViewById(android.R.id.content), R.string.warining_toast_str, Snackbar.LENGTH_LONG);
+                    // Changing action button text color
+                    View sbView = snackbar.getView();
+                    TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+                    textView.setTextColor(Color.RED);
+                    snackbar.show();
+
                 }
 
 
@@ -564,7 +573,6 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                     }
                     //Current image
                     Glide.with(this).load(Utils.getFileFromLocation(Utils.getPath(EditorActivity.this, selectedImage))).into(preview);
-
                 }
             }
         }

@@ -138,7 +138,6 @@ public class DetailsViewActivity extends AppCompatActivity implements android.su
 
             }
 
-
         }
     }
 

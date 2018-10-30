@@ -1,6 +1,7 @@
 package com.example.hasanzian.inventoryapp.activity;
 
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         inventoryListView.setAdapter(mInventoryAdapter);
         inventoryListView.setEmptyView(empty);
 
-
         inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,10 +120,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                // Delete all entries
-                int del = getContentResolver().delete(CONTENT_URI, null, null);
-                Toast.makeText(this, "DELETED :" + del, Toast.LENGTH_SHORT).show();
-                Utils.deleteAllOldFiles(this);
+
+                Cursor cursor = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    cursor = getContentResolver().query(CONTENT_URI, null, null, null);
+                    assert cursor != null;
+                    if (cursor.getCount() == 0) {
+                        Toast.makeText(getApplicationContext(), "Nonting to delete", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showDeleteConfirmationDialog();
+                    }
+                }
+
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -155,5 +165,37 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         super.onStart();
         mInventoryAdapter.swapCursor(Utils.readItem(this));
     }
+
+    private void showDeleteConfirmationDialog() {
+        // Create an AlertDialog.Builder and set the message, and click listeners
+        // for the postivie and negative buttons on the dialog.
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_all_dialog_msg);
+        builder.setPositiveButton(R.string.conform, new DialogInterface.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Delete" button, so ic_delete the item.
+                // Delete all entries
+                int del = getContentResolver().delete(CONTENT_URI, null, null);
+                Toast.makeText(getApplicationContext(), "DELETED :" + del, Toast.LENGTH_SHORT).show();
+                Utils.deleteAllOldFiles(getApplicationContext());
+
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked the "Cancel" button, so dismiss the dialog
+                // and continue editing the item.
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
 
 }

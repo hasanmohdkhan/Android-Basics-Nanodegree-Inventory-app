@@ -75,7 +75,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView supplier = view.findViewById(R.id.tv_product_supplier);
         TextView number = view.findViewById(R.id.tv_product_supplier_number);
         ImageView sale = view.findViewById(R.id.btn_sale);
-        ImageView product = view.findViewById(R.id.imgview_product_image);
+        ImageView product = view.findViewById(R.id.image_view_product_image);
 
         // Find the columns of pet attributes that we're interested in
         int idIndex = cursor.getColumnIndex(_ID);
@@ -105,12 +105,9 @@ public class InventoryCursorAdapter extends CursorAdapter {
         if (currentImage != null) {
             File imageFile = Utils.getFileFromLocation(currentImage);
             if (imageFile != null && imageFile.exists()) {
-                product.setImageBitmap(Utils.decodeSampledBitmapFromFile(imageFile, 100, 100));
+                product.setImageBitmap(Utils.decodeSampledBitmapFromFile(imageFile, 300, 300));
             }
         }
-
-
-
 
 
         sale.setOnClickListener(new View.OnClickListener() {

@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
+    <!--TODO Add a new theme for details view activity -->
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -70,7 +70,53 @@
         <item name="android:layout_marginBottom">@dimen/margin_4dp</item>
     </style>
 
-    <dimen name="textsize_22sp">22sp</dimen>
-    <dimen name="tv_16sp">16sp</dimen>
-    <dimen name="divider_1dp">1dp</dimen>
+    <style name="CardViewStyleListView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_16dp</item>
+        <item name="android:layout_marginLeft">@dimen/margin_8dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
+        <item name="android:layout_marginRight">@dimen/margin_8dp</item>
+
+
+    </style>
+
+    <style name="WidthMatchHeightWrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+
+    </style>
+
+    <style name="ImageListViewStyle">
+        <item name="android:layout_width">@dimen/image_width</item>
+        <item name="android:layout_height">@dimen/image_height</item>
+        <item name="android:layout_margin">@dimen/margin_8dp</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ProductNameTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/margin_8dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_8dp
+        </item>
+        <item name="android:layout_marginLeft" tools:targetApi="jelly_bean_mr1">@dimen/margin_8dp
+        </item>
+        <item name="android:textStyle">bold</item>
+
+
+    </style>
+
+    <style name="SaleIconStyle">
+        <item name="android:layout_width">@dimen/sale_btn_48dp</item>
+        <item name="android:layout_height">@dimen/sale_btn_48dp</item>
+        <item name="android:layout_marginStart" tools:targetApi="jelly_bean_mr1">@dimen/margin_16dp
+        </item>
+        <item name="android:layout_marginTop" tools:targetApi="jelly_bean_mr1">@dimen/margin_16dp
+        </item>
+        <item name="android:layout_marginLeft">@dimen/margin_8dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_8dp</item>
+    </style>
+
 </resources>
+
