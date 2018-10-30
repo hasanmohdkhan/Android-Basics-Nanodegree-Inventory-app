@@ -26,7 +26,8 @@
         <activity
             android:name=".activity.DetailsViewActivity"
             android:parentActivityName=".activity.MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/DetailsViewApptheme"
+            tools:targetApi="jelly_bean" />
 
         <provider
             android:name=".data.InventoryProvider"
