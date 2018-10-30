@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.example.hasanzian.inventoryapp.R;
 import com.example.hasanzian.inventoryapp.utils.Utils;
 
+import java.io.File;
+
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_IMAGE_LOCATION;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
@@ -72,6 +75,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         TextView supplier = view.findViewById(R.id.tv_product_supplier);
         TextView number = view.findViewById(R.id.tv_product_supplier_number);
         ImageView sale = view.findViewById(R.id.btn_sale);
+        ImageView product = view.findViewById(R.id.imgview_product_image);
 
         // Find the columns of pet attributes that we're interested in
         int idIndex = cursor.getColumnIndex(_ID);
@@ -80,6 +84,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         int quantityIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
         int supplierIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_NAME);
         int supplierNumberIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
+        int imageIndex = cursor.getColumnIndex(COLUMN_IMAGE_LOCATION);
 
         // Read the Inventory attributes from the Cursor for the current Inventory item in list
         final int currentId = cursor.getInt(idIndex);
@@ -88,6 +93,7 @@ public class InventoryCursorAdapter extends CursorAdapter {
         final int currentQuantity = cursor.getInt(quantityIndex);
         String currentSupplier = cursor.getString(supplierIndex);
         final String currentPhone = cursor.getString(supplierNumberIndex);
+        String currentImage = cursor.getString(imageIndex);
 
         // Update the TextViews with the attributes for the current Inventory item in list
         name.setText(currentProductName);
@@ -95,6 +101,16 @@ public class InventoryCursorAdapter extends CursorAdapter {
         quantity.setText(String.valueOf(currentQuantity));
         supplier.setText(currentSupplier);
         number.setText(currentPhone);
+
+        if (currentImage != null) {
+            File imageFile = Utils.getFileFromLocation(currentImage);
+            if (imageFile != null && imageFile.exists()) {
+                product.setImageBitmap(Utils.decodeSampledBitmapFromFile(imageFile, 100, 100));
+            }
+        }
+
+
+
 
 
         sale.setOnClickListener(new View.OnClickListener() {

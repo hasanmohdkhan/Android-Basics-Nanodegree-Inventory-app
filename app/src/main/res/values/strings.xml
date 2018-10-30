@@ -66,5 +66,8 @@
     <string name="toast_msg">Permission is required to call</string>
     <string name="toast_msg_granted">Permission granted</string>
     <string name="toast_msg_deny">Permission denied</string>
+    <string name="preview">preview</string>
+    <string name="select_picture_label">Select Picture</string>
+    <string name="permission_msg">Please Grant Permissions to access photos</string>
 
 </resources>

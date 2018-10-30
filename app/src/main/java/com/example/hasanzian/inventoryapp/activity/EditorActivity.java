@@ -1,14 +1,23 @@
 package com.example.hasanzian.inventoryapp.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,15 +27,19 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.hasanzian.inventoryapp.R;
-import com.example.hasanzian.inventoryapp.helper.InventoryDbHelper;
 import com.example.hasanzian.inventoryapp.utils.Utils;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_IMAGE_LOCATION;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
@@ -41,6 +54,9 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
      * Identifier for the inventory data loader
      */
     private static final int EXISTING_INVENTORY_LOADER = 1;
+    // private static final int PICK_IMAGE_REQUEST = 234;
+    private static final int PICK_IMAGE_REQUEST = 0;
+    private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 4;
     @BindView(R.id.et_product_name)
     EditText mProductName;
     @BindView(R.id.et_product_price)
@@ -56,17 +72,8 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
      * Boolean flag that keeps track of whether the item has been edited (true) or not (false)
      */
     private boolean mItemFieldHasChanged = false;
-    /**
-     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
-     * the view, and we change the mItemFieldHasChanged boolean to true.
-     */
-    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            mItemFieldHasChanged = true;
-            return false;
-        }
-    };
+    @BindView(R.id.preview)
+    ImageView preview;
     /**
      * Content URI for the existing Inventory item (null if it's a new item)
      */
@@ -77,10 +84,23 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     FloatingActionButton plus;
     @BindView(R.id.fab_minus)
     FloatingActionButton minus;
+    String oldImage;
+    /**
+     * OnTouchListener that listens for any user touches on a View, implying that they are modifying
+     * the view, and we change the mItemFieldHasChanged boolean to true.
+     */
+    private View.OnTouchListener mTouchListener = new View.OnTouchListener() {
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            mItemFieldHasChanged = true;
+            return false;
+        }
+    };
 
     int p, q, s, rs, ph, quantity;
-
-    InventoryDbHelper mHelper;
+    //a Uri object to store file path
+    private Uri selectedImage = null;
 
     private void clearEditText() {
         mProductName.setText("");
@@ -90,12 +110,12 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         mPhone.setText("");
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         ButterKnife.bind(this);
-        mHelper = new InventoryDbHelper(this);
 
         mProductName.setOnFocusChangeListener(this);
         mPrice.setOnFocusChangeListener(this);
@@ -120,27 +140,43 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         } else {
             getSupportLoaderManager().initLoader(EXISTING_INVENTORY_LOADER, null, this);
             setTitle(R.string.edit_existing_item);
+            Log.d("oldImage", "" + oldImage);
 
         }
 
         save.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
+                Log.d("old", "" + oldImage);
 
-                if (!isEmpty(mProductName) & !isEmpty(mPrice) & !isEmpty(mQuantity) & !isEmpty(mSupplier) & !isEmpty(mPhone)) {
+                if (!isEmpty(mProductName) & !isEmpty(mPrice) & !isEmpty(mQuantity) & !isEmpty(mSupplier) & !isEmpty(mPhone) & selectedImage != null) {
 
                     if (mCurrentInventoryUri == null) {
-                        Uri ID = Utils.insertProducts(getApplicationContext(), mProductName.getText().toString().trim(), mPrice.getText().toString().trim(), mQuantity.getText().toString().trim(), mSupplier.getText().toString().trim(), mPhone.getText().toString().trim());
+                        Uri ID = Utils.insertProducts(getApplicationContext(), mProductName.getText().toString().trim(), mPrice.getText().toString().trim(), mQuantity.getText().toString().trim(), mSupplier.getText().toString().trim(), mPhone.getText().toString().trim(), selectedImage, false);
                         if (ID != null) {
                             clearEditText();
                             finish();
                         }
                     } else {
-                        int rowsAffected = Utils.updateProducts(mCurrentInventoryUri, getApplicationContext(), mProductName.getText().toString().trim(), mPrice.getText().toString().trim(), mQuantity.getText().toString().trim(), mSupplier.getText().toString().trim(), mPhone.getText().toString().trim());
+                        int rowsAffected = Utils.updateProducts(mCurrentInventoryUri, getApplicationContext(), mProductName.getText().toString().trim(), mPrice.getText().toString().trim(), mQuantity.getText().toString().trim(), mSupplier.getText().toString().trim(), mPhone.getText().toString().trim(), selectedImage, false);
                         if (rowsAffected != 0) {
                             clearEditText();
                             finish();
+                            //delete old image of product
+                            File oldImageFile = Utils.getFileFromLocation(oldImage);
+                            if (oldImageFile != null && oldImageFile.exists()) {
+                                boolean isDeleted = oldImageFile.delete();
+                                if (isDeleted) {
+                                    Toast.makeText(getApplicationContext(), "Deleted: ", Toast.LENGTH_SHORT).show();
+                                    Log.d("Deleted: ", "" + true);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Deleted: ", Toast.LENGTH_SHORT).show();
+                                    Log.d("Deleted: ", "" + false);
+                                }
+                            }
                         }
+
                     }
                     Log.d("Text", "Et: " + mProductName.getText().toString());
 
@@ -167,6 +203,34 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
                 if (quantity > 0) {
                     quantity -= 1;
                     mQuantity.setText(String.valueOf(quantity));
+                }
+            }
+        });
+
+
+        preview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(EditorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) + ContextCompat.checkSelfPermission(EditorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(EditorActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) || ActivityCompat.shouldShowRequestPermissionRationale(EditorActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        Snackbar snackbar = Snackbar.make(EditorActivity.this.findViewById(android.R.id.content), R.string.permission_msg, Snackbar.LENGTH_INDEFINITE).setAction("ENABLE", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE);
+                                }
+                            }
+                        });
+                        snackbar.show();
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE);
+                        }
+
+                    }
+                } else {
+                    showFileChooser();
                 }
             }
         });
@@ -255,7 +319,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
     @NonNull
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
-        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
+        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER, COLUMN_IMAGE_LOCATION};
         return new CursorLoader(this, mCurrentInventoryUri, projection, null, null, null);
 
     }
@@ -276,6 +340,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
             int quantityColumnIndex = cursor.getColumnIndex(COLUMN_QUANTITY);
             int supplierColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_NAME);
             int phoneColumnIndex = cursor.getColumnIndex(COLUMN_SUPPLIER_PHONE_NUMBER);
+            int imageColumnIndex = cursor.getColumnIndex(COLUMN_IMAGE_LOCATION);
 
             // Extract out the value from the Cursor for the given column index
             String name = cursor.getString(nameColumnIndex);
@@ -283,6 +348,7 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
             int price = cursor.getInt(priceColumnIndex);
             String supplierName = cursor.getString(supplierColumnIndex);
             String phone = cursor.getString(phoneColumnIndex);
+            String imageUri = cursor.getString(imageColumnIndex);
 
             // Update the views on the screen with the values from the database
             mProductName.setText(name);
@@ -291,6 +357,14 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
             mSupplier.setText(supplierName);
             mPhone.setText(phone);
 
+            if (imageUri != null) {
+                File imageFile = Utils.getFileFromLocation(imageUri);
+                if (imageFile != null && imageFile.exists()) {
+                    preview.setImageBitmap(Utils.decodeSampledBitmapFromFile(imageFile, 365, 365));
+                    oldImage = "" + imageUri;
+                    Toast.makeText(this, "" + imageUri, Toast.LENGTH_SHORT).show();
+                }
+            }
         }
     }
 
@@ -452,6 +526,50 @@ public class EditorActivity extends AppCompatActivity implements View.OnFocusCha
         }
     }
 
+    //method to show file chooser
+    private void showFileChooser() {
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        } else {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        }
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.name());
+        intent.putExtra("return-data", true);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_label)), PICK_IMAGE_REQUEST);
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == PICK_IMAGE_REQUEST) {
+                if (data.getData() != null) {
+                    selectedImage = data.getData();
+                    Log.i("Editor Activity", "Uri: " + selectedImage.toString());
+                    final int takeFlags = data.getFlags() + Intent.FLAG_GRANT_READ_URI_PERMISSION;
+
+                    try {
+                        grantUriPermission(getPackageName(), selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        this.getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    }
+                    //Current image
+                    Glide.with(this).load(Utils.getFileFromLocation(Utils.getPath(EditorActivity.this, selectedImage))).into(preview);
+
+                }
+            }
+        }
+
+
+    }
 }
 

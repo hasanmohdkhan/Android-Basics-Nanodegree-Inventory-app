@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_IMAGE_LOCATION;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
@@ -24,7 +25,7 @@ public class InventoryDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE_INVENTORY = "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " + COLUMN_PRICE + " INTEGER NOT NULL, " + COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0, " + COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, " + COLUMN_SUPPLIER_PHONE_NUMBER + " TEXT );";
+        String CREATE_TABLE_INVENTORY = "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_PRODUCT_NAME + " TEXT NOT NULL, " + COLUMN_PRICE + " INTEGER NOT NULL, " + COLUMN_QUANTITY + " INTEGER NOT NULL DEFAULT 0, " + COLUMN_SUPPLIER_NAME + " TEXT NOT NULL, " + COLUMN_SUPPLIER_PHONE_NUMBER + " TEXT ," + COLUMN_IMAGE_LOCATION + " TEXT );";
 
         Log.d("TAG", CREATE_TABLE_INVENTORY);
 

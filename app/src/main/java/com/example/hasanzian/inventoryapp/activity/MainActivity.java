@@ -3,6 +3,7 @@ package com.example.hasanzian.inventoryapp.activity;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.example.hasanzian.inventoryapp.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_IMAGE_LOCATION;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRICE;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_PRODUCT_NAME;
 import static com.example.hasanzian.inventoryapp.data.InventoryContract.InventoryEntry.COLUMN_QUANTITY;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @BindView(R.id.list)
     ListView inventoryListView;
     InventoryCursorAdapter mInventoryAdapter;
+    Bitmap bm;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -83,16 +86,54 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         });
 
+        //this creates a png file in internal folder
+        //the directory is like : ......data/sketches/my_sketch_437657436.png
+//        File mFileTemp = new File(getFilesDir() + File.separator + "sketches",
+//                "Image" + System.currentTimeMillis() + ".png");
+//        mFileTemp.getParentFile().mkdirs();
+
+
+//         View.OnClickListener photoAlbumListener = new View.OnClickListener(){
+//            @Override
+//            public void onClick(View arg0) {
+//                Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+//                imagepath = Environment.getExternalStorageDirectory()+"/sharedresources/"+HelperFunctions.getDateTimeForFileName()+".png";
+//                uriImagePath = Uri.fromFile(new File(imagepath));
+//                photoPickerIntent.setType("image/*");
+//                photoPickerIntent.putExtra(MediaStore.EXTRA_OUTPUT,uriImagePath);
+//                photoPickerIntent.putExtra("outputFormat",Bitmap.CompressFormat.PNG.name());
+//                photoPickerIntent.putExtra("return-data", true);
+//                startActivityForResult(photoPickerIntent, REQUEST_CODE_CHOOSE_PICTURE_FROM_GALLARY);
+//
+//            }
+//        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
     }
 
     //Helper method to insert dummy data in Products table for debugging purpose
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void insertProducts() {
         // Insert a new row for "Mi A1" into the provider using the ContentResolver.
         // Use the {@link InventoryEntry#CONTENT_URI} to indicate that we want to insert
         // into the Inventory database table.
         // Receive the new content URI that will allow us to access "Mi A1"'s data in the future.
-        Utils.insertProducts(getApplicationContext(), "Mi A1", "15999", "100", "Xiaomi Ltd.", "8604646437");
+
+        String fileNameDemo = Utils.createDemoPic(this);
+        Utils.insertProducts(getApplicationContext(), "Mi A1", "15999", "100", "Xiaomi Ltd.", "8604646437", Uri.parse(fileNameDemo), true);
 
     }
 
@@ -102,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // User clicked on a menu option in the app bar overflow menu
@@ -116,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 // Delete all entries
                 int del = getContentResolver().delete(CONTENT_URI, null, null);
                 Toast.makeText(this, "DELETED :" + del, Toast.LENGTH_SHORT).show();
+                Utils.deleteAllOldFiles(this);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -125,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable Bundle args) {
         //  Cursor cursor;
-        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER};
+        String[] projection = {_ID, COLUMN_PRODUCT_NAME, COLUMN_PRICE, COLUMN_QUANTITY, COLUMN_SUPPLIER_NAME, COLUMN_SUPPLIER_PHONE_NUMBER, COLUMN_IMAGE_LOCATION};
         // cursor = getContentResolver().query(CONTENT_URI, projection, null, null, null);
         return new CursorLoader(this, CONTENT_URI, projection, null, null, null);
     }
@@ -142,4 +185,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mInventoryAdapter.swapCursor(null);
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mInventoryAdapter.swapCursor(Utils.readItem(this));
+    }
+
 }
