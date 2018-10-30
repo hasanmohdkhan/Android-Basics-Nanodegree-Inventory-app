@@ -73,5 +73,6 @@
     <string name="permission_msg">Please Grant Permissions to access photos</string>
     <string name="warining_toast_str">Check Entries or upload Image again</string>
     <string name="conform">Conform</string>
+    <string name="empty_list_view">empty list view</string>
 
 </resources>

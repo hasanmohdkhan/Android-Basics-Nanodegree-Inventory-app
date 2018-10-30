@@ -1,72 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorGray"
+    style="@style/MainActivity"
     tools:context=".activity.MainActivity">
 
     <ListView
         android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
+        style="@style/ListViewStyle"
         tools:listitem="@layout/list_item" />
 
     <!-- Empty view for the list -->
     <RelativeLayout
         android:id="@+id/empty_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true">
+        style="@style/EmptyViewRelativeLayout">
 
         <ImageView
             android:id="@+id/empty_image"
-            android:layout_width="@dimen/empty_image_300dp"
-            android:layout_height="@dimen/empty_image_300dp"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ic_storage" />
+            style="@style/EmptyListView"
+            android:contentDescription="@string/empty_list_view" />
 
         <TextView
             android:id="@+id/empty_title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/empty_image"
-            android:layout_centerHorizontal="true"
-            android:fontFamily="sans-serif-medium"
-            android:paddingTop="16dp"
-            android:text="@string/empty_view_title_text"
-            android:textAppearance="?android:textAppearanceMedium" />
+            style="@style/EmptyTextView"
+            android:layout_below="@+id/empty_image" />
 
         <TextView
             android:id="@+id/empty_subtitle_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/EmptyTextView"
             android:layout_below="@+id/empty_title_text"
-            android:layout_centerHorizontal="true"
             android:fontFamily="sans-serif"
-            android:paddingTop="8dp"
+            android:paddingTop="@dimen/margin_8dp"
             android:text="@string/empty_view_subtitle_text"
             android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="#A2AAB0" />
+            android:textColor="@color/ColorDarkGray"
+            tools:targetApi="jelly_bean" />
     </RelativeLayout>
 
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
-        android:layout_width="@dimen/fab_dimen_56dp"
-        android:layout_height="@dimen/fab_dimen_56dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="@dimen/margin_16dp"
-        android:layout_marginRight="@dimen/margin_16dp"
-        android:layout_marginBottom="@dimen/margin_16dp"
-        android:clickable="true"
-        app:backgroundTint="@color/colorAccent"
-        android:focusable="true"
-        app:srcCompat="@drawable/ic_plus" />
+        style="@style/FabAddNewItem"
+        app:srcCompat="@drawable/ic_plus"
+        tools:ignore="VectorDrawableCompat" />
 
 </RelativeLayout>
